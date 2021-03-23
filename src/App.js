@@ -32,8 +32,25 @@ export default class App extends Component {
 		this.setState({ posts })
 	}
 
-	handleUpdate = (post) => {
-		console.log("Update", post)
+	handleUpdate = async (post) => {
+		post.title = "UPDATED"
+
+		// Because we are updating a particular data, we've to mention the post's id along with the API_ENDPOINT/post.id
+
+		// As a 2nd argument we need to pass the data to be send to the server.
+		await axios.put(`${API_ENDPOINT}/${post.id}`, post)
+
+    // Clone the state posts
+		const posts = [...this.state.posts]
+    // Find the index of the post from the posts array
+		const index = posts.indexOf(post)
+    // Clone the new post in position of the array of posts[index]
+		posts[index] = { ...post }
+    // Update the state of the posts
+		this.setState({ posts })
+
+		// If we use the patch method, we don't have to send to entire post object. We can send only 1 or more properties, and these are the properties we want to update.
+		// axios.patch(`${API_ENDPOINT}/${post.id}`, { title: post.title })
 	}
 
 	handleDelete = (post) => {
