@@ -2,6 +2,25 @@ import { Component } from "react"
 import axios from "axios"
 import "./App.css"
 
+// axios interceptors for error handling
+// 2nd parameter function will be executed every time we have a response and error
+axios.interceptors.response.use(null, (error) => {
+	// For expected error
+	const expectedError =
+		error.response && error.reponse.status >= 400 && error.response.status < 500
+	if (!expectedError) {
+		// Unexpected Error
+		// Unexpected (Network down, Server Down, Database Down, Bug in application)
+			// - Log them
+			// - Display a generic and friendly error message to the user
+		console.log("Logging the error", error)
+		alert("An unexpected error occurred!")
+	}
+
+	// To pass control to catch block, we return a rejected promise. It just receives error in our promise object
+	return Promise.reject(error)
+})
+
 const API_ENDPOINT = "https://jsonplaceholder.typicode.com/posts"
 
 export default class App extends Component {
@@ -86,13 +105,6 @@ export default class App extends Component {
 			// Display a specific error message to the user
 			if (error.response && error.response.status === 404)
 				alert("This post has already been deleted")
-			// Unexpected (Network down, Server Down, Database Down, Bug in application)
-			// - Log them
-			// - Display a generic and friendly error message to the user
-			else {
-				console.log("Logging the error", error)
-				alert("An unexpected error occurred!")
-			}
 
 			this.setState({ posts: originalPosts })
 		}
