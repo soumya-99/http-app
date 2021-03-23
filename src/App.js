@@ -1,8 +1,7 @@
 import { Component } from "react"
 import http from "./services/httpService"
 import "./App.css"
-
-const API_ENDPOINT = "https://jsonplaceholder.typicode.com/posts"
+import { API_ENDPOINT } from "./config.json"
 
 export default class App extends Component {
 	state = {
