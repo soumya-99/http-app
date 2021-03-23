@@ -1,4 +1,5 @@
 import axios from "axios"
+import { toast } from "react-toastify"
 
 // axios interceptors for error handling
 // 2nd parameter function will be executed every time we have a response and error
@@ -12,7 +13,7 @@ axios.interceptors.response.use(null, (error) => {
 		// - Log them
 		// - Display a generic and friendly error message to the user
 		console.log("Logging the error", error)
-		alert("An unexpected error occurred!")
+		toast.error("An unexpected error occurred!")
 	}
 
 	// To pass control to catch block, we return a rejected promise. It just receives error in our promise object

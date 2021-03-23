@@ -1,6 +1,8 @@
 import { Component } from "react"
+import { ToastContainer } from "react-toastify"
 import http from "./services/httpService"
 import "./App.css"
+import "react-toastify/dist/ReactToastify.css"
 import { API_ENDPOINT } from "./config.json"
 
 export default class App extends Component {
@@ -79,7 +81,7 @@ export default class App extends Component {
 
 		try {
 			// Delete from the server
-			await http.delete(`${API_ENDPOINT}/${post.id}`)
+			await http.delete(`ds${API_ENDPOINT}/${post.id}`)
 		} catch (error) {
 			// Expected (404: not found, 400: bad request) - CLIENT ERRORS
 			// Display a specific error message to the user
@@ -93,6 +95,7 @@ export default class App extends Component {
 	render() {
 		return (
 			<>
+			<ToastContainer />
 				<button className="btn btn-primary my-2" onClick={this.handleAdd}>
 					Add
 				</button>
