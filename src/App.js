@@ -81,9 +81,19 @@ export default class App extends Component {
 		try {
 			// Delete from the server
 			await axios.delete(`${API_ENDPOINT}/${post.id}`)
-			throw new Error("")
 		} catch (error) {
-			alert("Something Went Wrong while deleting a post!")
+			// Expected (404: not found, 400: bad request) - CLIENT ERRORS
+			// Display a specific error message to the user
+			if (error.response && error.response.status === 404)
+				alert("This post has already been deleted")
+			// Unexpected (Network down, Server Down, Database Down, Bug in application)
+			// - Log them
+			// - Display a generic and friendly error message to the user
+			else {
+				console.log("Logging the error", error)
+				alert("An unexpected error occurred!")
+			}
+
 			this.setState({ posts: originalPosts })
 		}
 	}
