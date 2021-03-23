@@ -23,8 +23,10 @@ export default class App extends Component {
 		// Because we're creating data, we need to include this data in the body of the request. So, we need to set this object (obj) to the server. So, we'll pass obj as a 2nd argument in post() method.
 
 		// In this case, when we send a http-request, to create a new post the server or the backend will respond with the newly created post (Not the entire list of posts)
+		// Add the data to the server
 		const { data: post } = await axios.post(API_ENDPOINT, obj)
 
+		// Add the data to the table view
 		// Create the state
 		const posts = [post, ...this.state.posts]
 
@@ -38,23 +40,31 @@ export default class App extends Component {
 		// Because we are updating a particular data, we've to mention the post's id along with the API_ENDPOINT/post.id
 
 		// As a 2nd argument we need to pass the data to be send to the server.
+		// Update in the server
 		await axios.put(`${API_ENDPOINT}/${post.id}`, post)
 
-    // Clone the state posts
+		// Update the table in browser view
+		// Clone the state posts
 		const posts = [...this.state.posts]
-    // Find the index of the post from the posts array
+		// Find the index of the post from the posts array
 		const index = posts.indexOf(post)
-    // Clone the new post in position of the array of posts[index]
+		// Clone the new post in position of the array of posts[index]
 		posts[index] = { ...post }
-    // Update the state of the posts
+		// Update the state of the posts
 		this.setState({ posts })
 
 		// If we use the patch method, we don't have to send to entire post object. We can send only 1 or more properties, and these are the properties we want to update.
 		// axios.patch(`${API_ENDPOINT}/${post.id}`, { title: post.title })
 	}
 
-	handleDelete = (post) => {
-		console.log("Delete", post)
+	handleDelete = async (post) => {
+		// Delete from the server
+		await axios.delete(`${API_ENDPOINT}/${post.id}`)
+
+		// Delete from the table (Update the view)
+		// We want all posts, except the post we've deleted.
+		const posts = this.state.posts.filter((p) => p.id !== post.id)
+		this.setState({ posts })
 	}
 
 	render() {
