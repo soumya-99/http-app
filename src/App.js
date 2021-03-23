@@ -57,14 +57,35 @@ export default class App extends Component {
 		// axios.patch(`${API_ENDPOINT}/${post.id}`, { title: post.title })
 	}
 
-	handleDelete = async (post) => {
-		// Delete from the server
-		await axios.delete(`${API_ENDPOINT}/${post.id}`)
+	//// Pessimistic Updates
+	//// 1st server call, then update view
+	// handleDelete = async (post) => {
+	// 	// Delete from the server
+	// 	await axios.delete(`${API_ENDPOINT}/${post.id}`)
 
+	// 	// Delete from the table (Update the view)
+	// 	// We want all posts, except the post we've deleted.
+	// 	const posts = this.state.posts.filter((p) => p.id !== post.id)
+	// 	this.setState({ posts })
+	// }
+
+	// Optimistic Updates
+	// 1st update the view, then server call
+	handleDelete = async (post) => {
+		const originalPosts = this.state.posts
 		// Delete from the table (Update the view)
 		// We want all posts, except the post we've deleted.
 		const posts = this.state.posts.filter((p) => p.id !== post.id)
 		this.setState({ posts })
+
+		try {
+			// Delete from the server
+			await axios.delete(`${API_ENDPOINT}/${post.id}`)
+			throw new Error("")
+		} catch (error) {
+			alert("Something Went Wrong while deleting a post!")
+			this.setState({ posts: originalPosts })
+		}
 	}
 
 	render() {
