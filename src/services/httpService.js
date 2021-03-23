@@ -1,5 +1,5 @@
 import axios from "axios"
-import Raven from "raven-js"
+import logger from "./logService"
 import { toast } from "react-toastify"
 
 // axios interceptors for error handling
@@ -13,7 +13,7 @@ axios.interceptors.response.use(null, (error) => {
 		// Unexpected (Network down, Server Down, Database Down, Bug in application)
 		// - Log them
 		// - Display a generic and friendly error message to the user
-		Raven.captureException(error)
+		logger.log(error)
 		toast.error("An unexpected error occurred!")
 	}
 
